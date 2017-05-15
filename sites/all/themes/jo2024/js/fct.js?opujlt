@@ -1,0 +1,3 @@
+function resetSpeaker() {
+  ReadSpeaker.q(function(){if(rspkr.ui.getActivePlayer()){rspkr.ui.getActivePlayer().close()}});
+}

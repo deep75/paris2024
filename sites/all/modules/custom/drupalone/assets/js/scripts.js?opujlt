@@ -1,0 +1,274 @@
+function submit_newsletter_form() {
+    jQuery(document).ready(function () {
+        jQuery("#newsletter-form #edit-submit").mousedown();
+
+    });
+
+}
+
+jQuery(document).ready(function () {
+
+    // validation formulaire benevoles
+    var benevol = jQuery('.form-benevoles form');
+    if(benevol.length){
+
+        jQuery('.form-select:not([multiple])').uniform({selectAutoWidth: false});
+
+        jQuery('.form-checkbox').uniform();
+        jQuery('.form-file').uniform({
+            fileDefaultHtml : Drupal.t('Select my file'),
+            fileButtonHtml : Drupal.t('It must not exceed 2 MB')
+        });
+
+
+        jQuery.validator.addMethod('filesize', function(value, element, param) {
+            // param = size (en bytes)
+            // element = element to validate (<input>)
+            // value = value of the element (file name)
+            return this.optional(element) || (element.files[0].size <= param)
+        });
+
+        benevol.validate({
+            highlight: function(element) {
+                console.log(jQuery(element).prop('type'));
+                jQuery(element).closest('.webform-component-number').removeClass('has-success').addClass('has-error');
+                jQuery(element).addClass('error');
+            },
+            unhighlight: function(element) {
+                jQuery(element).closest('.webform-component-number').removeClass('has-error').addClass('has-success');
+                jQuery(element).removeClass('error');
+            },
+            errorPlacement: function (error, element) {
+                if (element.prop('type') === 'file') {
+                    error.insertAfter(element);
+                } else {
+                    error.insertAfter(element);
+                }
+                if (element.prop('type') === 'checkbox' || element.prop('type') === 'radio') {
+                    error.insertAfter(element.parent());
+
+                } else {
+                    error.insertAfter(element);
+                }
+
+            },
+            rules: {
+                "submitted[nom]": {
+                    required: true
+                },
+                "submitted[prenom]": {
+                    required: true
+                },
+                "submitted[email]": {
+                    required: true,
+                    email: true
+                },
+                "submitted[code_postal]": {
+                    required: true,
+                    number: true,
+                    minlength: 5,
+                    maxlength: 5
+                },
+                "submitted[age]": {
+                    required: true
+                },
+                "submitted[numero_de_telephone]": {
+                    number: true,
+                    minlength: 10,
+                    maxlength: 10
+                },
+                "files[submitted_motivations]": {
+                    filesize: 2097152
+                }
+            },
+            messages: {
+                "submitted[nom]": {
+                    required: Drupal.t('This field is required')
+                },
+                "submitted[prenom]": {
+                    required: Drupal.t('This field is required')
+                },
+                "submitted[email]": {
+                    required: Drupal.t('This field is required'),
+                    email: Drupal.t('Thank you for checking the format of your email address')
+                },
+                "submitted[code_postal]": {
+                    required: Drupal.t('This field is required'),
+                    number: Drupal.t('Please enter a 5 digit postal code'),
+                    minlength: Drupal.t('Please enter a 5 digit postal code'),
+                    maxlength: Drupal.t('Please enter a 5 digit postal code')
+                },
+                "submitted[age]": {
+                    required: Drupal.t('This field is required')
+                },
+                "submitted[numero_de_telephone]": {
+                    number: Drupal.t('Please enter a 10-digit phone number'),
+                    minlength: Drupal.t('Please enter a 10-digit phone number'),
+                    maxlength: Drupal.t('Please enter a 10-digit phone number')
+                },
+                "files[submitted_motivations]": {
+                    filesize: Drupal.t('Your file should not exceed 2MB')
+                }
+            }
+        });
+    }
+    // Insert your scripts here
+
+    jQuery("#newsletter-form").submit(function(){
+        jQuery("#newsletter-form #edit-submit").mousedown();
+        return false;
+    });
+
+    if (jQuery('#newsletter-form').length > 0) {
+
+        //jQuery(".group1").colorbox();
+        jQuery(".inline").colorbox({inline: true, width: "660px", minHeight: "360px", overlayClose: false});
+
+    }
+
+    if (jQuery('#application-form').length > 0) {
+
+        jQuery("#application-form").validate({
+            rules: {
+                "lastname": {
+                    required: true,
+                },
+                "firstname": {
+                    required: true,
+                },
+                "phone": {
+                    required: true,
+                },
+                "email": {
+                    required: true,
+                    email: true
+                }
+            }
+        });
+        jQuery(".form-text,.form-file").uniform();
+    }
+
+    if (jQuery('.flexslider').length > 0) {
+        jQuery('.flexslider').flexslider({directionNav: false});
+    }
+
+    if (jQuery('#ac_accordion').length > 0) {
+        jQuery("#ac_accordion").accordion({collapsible: true});
+    }
+
+    if (jQuery('#ac_tabs').length > 0) {
+        jQuery("#ac_tabs").tabs();
+    }
+    jQuery(document).on('click', '.page-node .publication .share-link .tw,.page-node .content-header .share-link .tw,.page-paris-live .timeline .share-link .tw', function (e) {
+        var entity_id = jQuery(this).attr("id");
+        var cible = jQuery(this).next(".tw-count");
+
+        if (!jQuery(this).hasClass("shared")) {
+            jQuery(this).addClass("shared");
+            jQuery.ajax({
+                type: 'POST',
+                url: '/jo2024/ajax/tw-share',
+                data: {'id_pub': entity_id},
+                success: function (data) {
+                    cible.html(data);
+                }
+            });
+
+        }
+    });
+
+    if (jQuery('#carte-olympiques .img.carte img.jq_maphilight').length) {
+        jQuery('#carte-olympiques .img.carte img.jq_maphilight').rwdImageMaps();
+    }
+    if (jQuery('#carte-paralympiques .img.carte img').length) {
+        jQuery('#carte-paralympiques .img.carte img').rwdImageMaps();
+    }
+    jQuery(document).ajaxComplete(function () {
+
+
+        if (jQuery('#carte-olympiques .img.carte img.jq_maphilight').length) {
+            jQuery('#carte-olympiques .img.carte img.jq_maphilight').rwdImageMaps();
+        }
+        if (jQuery('#carte-paralympiques .img.carte img').length) {
+            jQuery('#carte-paralympiques .img.carte img').rwdImageMaps();
+        }
+    });
+    if (jQuery(".faq-content").length > 0) {
+
+        jQuery(document).on('click', '.show-detail', function (e) {
+
+            jQuery(".detail-faq").remove();//remove old detail
+            jQuery(".opened").removeClass("opened");//remove old class opened
+
+            var item_id = jQuery(this).attr("id");
+            var device = jQuery(this).attr("data-id");
+            var is_mobile = (device == "mobile") ? true : false;
+            var cible = (is_mobile) ? jQuery(this).parent() : jQuery(this).parent().parent(".grid");
+            var container = jQuery(this).parent();
+            jQuery.ajax({
+                type: 'POST',
+                url: '/jo2024/ajax/faq',
+                data: {
+                    'id': item_id,
+                    'device': device,
+                },
+                success: function (html) {
+                    if (html) {
+                        cible.after(html);
+                    }
+                }
+            }).complete(function () {
+
+                container.addClass("opened");
+                //var top = container.offset().top;
+
+                jQuery('#page-wrapper').mCustomScrollbar("scrollTo",container,{
+                    scrollInertia:700,
+                    callbacks:false
+                });
+                var width = jQuery('.embedded-video iframe').width();
+                width = width * 0.5625;
+                jQuery('.embedded-video iframe').css('height', width + "px");
+            });
+        });
+        return false;
+    }
+});
+
+jQuery(window).load(function(){
+    //var player = DM.player(document.getElementById("video-1743"), {
+    //    video: "xwr14q",
+    //    width: "100%",
+    //    height: "100%",
+    //    params: {
+    //        autoplay: false,
+    //        mute: false
+    //    }
+    //});
+    (function() {
+        var iframes = document.querySelectorAll(".event-video .dailymotion-video");
+        var player = [];
+        for (var i = 0, len = iframes.length; i < len; i++){
+            var video_id = iframes[i].getAttribute("data-lnk");
+            DM.init();
+            player[i] = DM.player(iframes[i], {
+                video: video_id,
+                width: "100%",
+                height: "100%",
+                params: {
+                    autoplay: false,
+                    mute: false,
+                    controls: true
+                }
+            });
+            player[i].setVolume(0.8);
+        }
+        jQuery('.get-video__close').click(function(){
+            for (var i = 0, len = iframes.length; i < len; i++){
+                //player[i].seek(0);
+                player[i].setVolume(0.8);
+                player[i].pause();
+            }
+        });
+    })();
+});
